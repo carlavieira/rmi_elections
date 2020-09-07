@@ -3,7 +3,7 @@ import java.util.Vector;
 import java.util.HashMap;
 import java.rmi.server.UnicastRemoteObject;
 
-public class ElectionServant extends UnicastRemoteObject implements Election {
+public class ElectionServant implements Election {
 
 	private Vector<Vote> votes;
 	private String cache;
