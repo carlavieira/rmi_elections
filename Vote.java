@@ -13,5 +13,5 @@ public class Vote implements Serializable {
 	}
 
 	public void print() {
-		System.out.print("Candidate: "+candidate+ " -  Voter ID: "+voterId); }
+		System.out.println("Candidate: "+candidate+ " -  Voter ID: "+voterId); }
 }

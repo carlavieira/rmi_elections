@@ -15,7 +15,7 @@ public class ElectionClient {
 		String candidate = "Nulo";
 
 
-		System.out.println("argslen: " + args.length);
+		// System.out.println("argslen: " + args.length);
 		if (args.length > 0)
 			option = args[0]; // specifies result or vote
 		if (args.length > 1)
@@ -30,30 +30,36 @@ public class ElectionClient {
 
 		Election aElection = null;
 
-		try {
-			Registry registry = LocateRegistry.getRegistry("localhost");
-			aElection = (Election) registry.lookup("Election");
-			System.out.println("Election found.");
+		for (int i = 1; i <= 5 ; i++){
 
-			//// invocação remota
-			HashMap<String, Integer> sResult = aElection.result();
-			System.out.println("Retornado o vetor de Election");
+			try {
+				Registry registry = LocateRegistry.getRegistry("localhost");
+				aElection = (Election) registry.lookup("Election");
+				// System.out.println("Election found.");
 
-			if (option.equals("results")) {
-				sResult.entrySet().stream()
-						.sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-						.limit(10)
-						.forEach(System.out::println);
-			} else {
-				// invocação remota
-				Vote v = aElection.vote(candidate, getVoterId(voterName));
-				System.out.println("Vote: ");
-				v.print();
+				//// invocação remota
+				HashMap<String, Integer> sResult = aElection.result();
+				// System.out.println("Retornado o vetor de Election");
+
+				if (option.equals("results")) {
+					sResult.entrySet().stream()
+							.sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+							.limit(10)
+							.forEach(System.out::println);
+				} else {
+					// invocação remota
+					Vote v = aElection.vote(candidate, getVoterId(voterName));
+					System.out.println("Your Vote: ");
+					v.print();
+				}
+				break;
+			} catch (RemoteException | NotBoundException e) {
+				try {
+					java.lang.Thread.sleep(6000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
 			}
-		} catch (RemoteException e) {
-			System.out.println("Método results: " + e.getMessage());
-		} catch (Exception e) {
-			System.out.println("Lookup: " + e.getMessage());
 		}
 	}
 
